@@ -1,1 +1,1 @@
-# ![WEB](https://zeroxy.github.io/sudoku)
+# [WEB](https://zeroxy.github.io/sudoku)
