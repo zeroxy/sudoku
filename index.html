@@ -1,5 +1,6 @@
 <html>
 <head>
+  <meta charset="utf-8">
   <script src="angular.min.js"></script>
   <script src="underscore.js"></script>
   <script lang="javascript">
@@ -158,16 +159,20 @@
       $scope.idx = nine;
       $scope.data = [];
       $scope.backtrack_stack = [];
+      $scope.provdata = [];
       for (row in nine){
         $scope.data[row]=[];
+        $scope.provdata[row] = [];
         for (col in nine){
           $scope.data[nine[row]][nine[col]]=parseInt($scope.sampledata[106][nine[col]+nine[row]*9]);
+          $scope.provdata[nine[row]][nine[col]]=parseInt($scope.sampledata[106][nine[col]+nine[row]*9]);
         }
       }
       $scope.newgame = function(){
         for (row in nine){
           for (col in nine){
             $scope.data[nine[row]][nine[col]]=parseInt($scope.selectedProv[nine[col]+nine[row]*9]);
+            $scope.provdata[nine[row]][nine[col]]=parseInt($scope.selectedProv[nine[col]+nine[row]*9]);
           }
         }
       };
@@ -319,12 +324,25 @@
     </tr>
   </table>
   <p><input type="button" value=" next step!! " ng-click="oneinput()"></input></p>
-  
+
+  <h3>풀이 스텝별 변화상황</h3>
+  <br/>
   <table border='1'>
     <tr ng-repeat="row in idx">
       <td ng-repeat = "col in idx">
         <b ng-show="data[row][col] == 0">{{data[row][col]}}</b>
         <span ng-hide="data[row][col] == 0">{{data[row][col]}}</b>
+      </td>
+    </tr>
+  </table>
+  <br/>
+  <h3>오리지널 문제</h3>
+  <br/>
+  <table border='1'>
+    <tr ng-repeat="row in idx">
+      <td ng-repeat = "col in idx">
+        <b ng-show="provdata[row][col] == 0">{{provdata[row][col]}}</b>
+        <span ng-hide="provdata[row][col] == 0">{{provdata[row][col]}}</b>
       </td>
     </tr>
   </table>
