@@ -314,6 +314,8 @@
   </script>
 </head>
 <body ng-app="sudokuApp" ng-controller="sudokuCtrl">
+  <h3>문제 선택</h3>
+  <br/>
   <select ng-model="selectedProv" ng-options="prov for prov in sampledata" ng-change="newgame()"></select><br>
   <table border='1'>
     <tr ng-repeat="row in idx">
