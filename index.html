@@ -9,7 +9,8 @@
     var all_data = [1,2,3,4,5,6,7,8,9];
     var app = angular.module('sudokuApp',[]);
     app.controller('sudokuCtrl',function($scope){
-      $scope.sampledata =  ["003020600900305001001806400008102900700000008006708200002609500800203009005010300"
+      $scope.sampledata =  ["300008100004002003007000000100000008009007400200001007000000500800500900003600004"
+                           ,"003020600900305001001806400008102900700000008006708200002609500800203009005010300"
                            ,"000105068000000701901000030007026000500000003000870400030000805105000000790401000"
                            ,"400000805030000000000700000020000060000080400000010000000603070500200000104000000"
                            ,"200080300060070084030500209000105408000000000402706000301007040720040060004010003"
@@ -165,8 +166,8 @@
         $scope.data[row]=[];
         $scope.provdata[row] = [];
         for (var col in nine){
-          $scope.data[nine[row]][nine[col]]=parseInt($scope.sampledata[84][nine[col]+nine[row]*9]);
-          $scope.provdata[nine[row]][nine[col]]=parseInt($scope.sampledata[84][nine[col]+nine[row]*9]);
+          $scope.data[nine[row]][nine[col]]=parseInt($scope.sampledata[0][nine[col]+nine[row]*9]);
+          $scope.provdata[nine[row]][nine[col]]=parseInt($scope.sampledata[0][nine[col]+nine[row]*9]);
         }
       }
       $scope.newgame = function(){
@@ -315,29 +316,30 @@
           }
           if (notzero == 0){
             // 검증
-            $scope.verify = "변경 없음"
-            for (var row in idx){
-              for (var col in idx){
-                if ($scope.provdata[row][col] != 0 && $scope.data[row][col] != $scope.provdata[row][col])
-                  $scope.verify = " 변경됨! ( " + row+ " , " + col+" )";
-                  return;
+            $scope.verify = "";
+            for (var row =0; row<9; row++){
+              for (var col =0; col<9; col++){
+                if (parseInt($scope.provdata[row][col]) != 0 && parseInt($scope.data[row][col]) != parseInt($scope.provdata[row][col]) ){
+                    console.log(row,col);
+                    $scope.verify += "변경됨! ( " + row+ " , " + col+" )\n";
+                  }
               }
             }
-            for (var row in idx){
+            for (var row =0; row<9; row++){
               var tmp = [];
-              for(var col in idx){
+              for(var col =0; col<9; col++){
                 tmp.push($scope.data[row][col]);
               }
               if (_.uniq(tmp).length != tmp.length)
                 $scope.verify += "행번호 : "+ row +" 중복 발견!";
             }
-            for (var col in idx){
+            for (var col =0; col<9; col++){
               var tmp = [];
-              for(var row in idx){
+              for(var row =0; row<9; row++){
                 tmp.push($scope.data[row][col]);
               }
               if (_.uniq(tmp).length != tmp.length)
-                $scope.verify += "행번호 : "+ row +" 중복 발견!";
+                $scope.verify += "열번호 : "+ col +" 중복 발견!";
             }
             // 검증 끝
             return;
