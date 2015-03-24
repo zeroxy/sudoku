@@ -321,7 +321,7 @@
               for (var col =0; col<9; col++){
                 if (parseInt($scope.provdata[row][col]) != 0 && parseInt($scope.data[row][col]) != parseInt($scope.provdata[row][col]) ){
                     console.log(row,col);
-                    $scope.verify += "변경됨! ( " + row+ " , " + col+" )\n";
+                    $scope.verify += "문제가 변경됨! ( " + row+ " , " + col+" ) ";
                   }
               }
             }
@@ -342,6 +342,9 @@
                 $scope.verify += "열번호 : "+ col +" 중복 발견!";
             }
             // 검증 끝
+            if($scope.verify.length==0){
+              $scope.verify="문제 없음";
+            }
             return;
           }
           var tmpselect = {"table":tmptabledata,"cel_row":min["r"], "cel_col":min["c"],"elnum":0};
