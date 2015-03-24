@@ -157,10 +157,11 @@
                            ,"300080000000700005100000000000000360002004000070000000000060130045200000000000800"];
       $scope.idx = nine;
       $scope.data = [];
+      $scope.backtrack_stack = [];
       for (row in nine){
         $scope.data[row]=[];
         for (col in nine){
-          $scope.data[nine[row]][nine[col]]=parseInt($scope.sampledata[0][nine[col]+nine[row]*9]);
+          $scope.data[nine[row]][nine[col]]=parseInt($scope.sampledata[106][nine[col]+nine[row]*9]);
         }
       }
       $scope.newgame = function(){
@@ -196,15 +197,12 @@
         return _.difference(all_data,tmp);
       }
       $scope.validate = function(row,col){
-        //console.log(row," = ", col);
-        //return $scope.validateRow(row,col)
         if($scope.data[row][col] == 0){
-          //return [$scope.validateRow(row,col),$scope.validateCol(row,col),$scope.validateCell(row,col)];
           return _.intersection($scope.validateRow(row,col),$scope.validateCol(row,col),$scope.validateCell(row,col));
         } else {
           return [];
         }
-      }
+      };
       $scope.onecheck = function(){
         result = [];
         for(row in nine){
@@ -251,24 +249,62 @@
         }
         
         return result;
-      }
+      };
+      $scope.branch = function(){
+        tmpselect = $scope.backtrack_stack.pop();
+        for(rr=0; rr<9; rr++){
+          for(cc=0; cc<9; cc++){
+            $scope.data[rr][cc] = parseInt(tmpselect["table"][rr*9+cc]);
+          }
+        }
+        tmpele = $scope.validate(tmpselect["cel_row"],tmpselect["cel_col"]);
+        if(tmpele.length>tmpselect["elnum"]+1){
+          tmpselect["elnum"]=tmpselect["elnum"]+1;
+          $scope.data[tmpselect["cel_row"]][tmpselect["cel_col"]] = tmpele[tmpselect["elnum"]];
+          $scope.backtrack_stack.push(tmpselect);
+          return;
+        } else {
+          $scope.branch();
+          return;
+        }
+      };
       $scope.oneinput = function(){
         list = $scope.onecheck();
-        min={len:9,r:0,c:0,arr:[]};
         if(list.length>0){
           for (idx in list){
             $scope.data[parseInt(list[idx]["row"])][parseInt(list[idx]["col"])] = parseInt(list[idx]["num"]);
           }
         }
         //backtracking 을 위한 준비 
-        //else {
-        //  for(rr = 0 ; rr<9; rr++)
-        //    for(cc = 0; cc<9; cc++)
-        //      if(min.len>$scope.validate(rr,cc).length)
-        //        min = {len:$scope.validate(rr,cc).length,r:rr,c:cc,arr:$scope.validate(rr,cc)};
-        //  
-        //}
-      }
+        else {
+          tmptabledata ="";
+          min={"len":9,"r":0,"c":0};
+          notzero = 81;
+          for(brr = 0 ; brr<9; brr++){
+            for(bcc = 0; bcc<9; bcc++){
+              tmptabledata = tmptabledata +$scope.data[brr][bcc];
+              if($scope.data[brr][bcc]==0 && $scope.validate(brr,bcc).length ==0){
+                $scope.branch();
+                return;
+              }
+              else if($scope.data[brr][bcc]==0 && min["len"]>$scope.validate(brr,bcc).length){
+                min = {"len":$scope.validate(brr,bcc).length,"r":brr,"c":bcc};
+              } else if($scope.data[brr][bcc]!=0){
+                notzero-=1;
+              }
+            }
+          }
+          if (notzero == 0){
+            return;
+          }
+          console.log(tmptabledata);
+          tmpselect = {"table":tmptabledata,"cel_row":min["r"], "cel_col":min["c"],"elnum":0};
+          $scope.data[tmpselect["cel_row"]][tmpselect["cel_col"]] = $scope.validate(tmpselect["cel_row"],tmpselect["cel_col"])[tmpselect["elnum"]];
+          $scope.backtrack_stack.push(tmpselect);
+          console.log("pushed! ",tmpselect);
+          console.log($scope.backtrack_stack);
+        }
+      };
     });
   </script>
 </head>
