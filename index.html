@@ -160,46 +160,60 @@
       $scope.data = [];
       $scope.backtrack_stack = [];
       $scope.provdata = [];
-      for (row in nine){
+      $scope.verify="";
+      for (var row in nine){
         $scope.data[row]=[];
         $scope.provdata[row] = [];
-        for (col in nine){
-          $scope.data[nine[row]][nine[col]]=parseInt($scope.sampledata[106][nine[col]+nine[row]*9]);
-          $scope.provdata[nine[row]][nine[col]]=parseInt($scope.sampledata[106][nine[col]+nine[row]*9]);
+        for (var col in nine){
+          $scope.data[nine[row]][nine[col]]=parseInt($scope.sampledata[84][nine[col]+nine[row]*9]);
+          $scope.provdata[nine[row]][nine[col]]=parseInt($scope.sampledata[84][nine[col]+nine[row]*9]);
         }
       }
       $scope.newgame = function(){
-        for (row in nine){
-          for (col in nine){
+        $scope.verify="";
+        for (var row in nine){
+          for (var col in nine){
             $scope.data[nine[row]][nine[col]]=parseInt($scope.selectedProv[nine[col]+nine[row]*9]);
             $scope.provdata[nine[row]][nine[col]]=parseInt($scope.selectedProv[nine[col]+nine[row]*9]);
           }
         }
       };
       $scope.validateCell= function(row, col){
-        tmp =[];
-        cell_row_base=Math.floor(row/3)*3;
-        cell_col_base=Math.floor(col/3)*3;
-        for(i=0;i<3;i++){
-          for(j=0;j<3;j++){
-            tmp.push($scope.data[cell_row_base+i][cell_col_base+j]);
+        var tmp =[];
+        var cell_row_base=Math.floor(row/3)*3;
+        var cell_col_base=Math.floor(col/3)*3;
+        for(var i=0;i<3;i++){
+          for(var j=0;j<3;j++){
+            if ($scope.data[cell_row_base+i][cell_col_base+j]!=0)
+              tmp.push($scope.data[cell_row_base+i][cell_col_base+j]);
           }
         }
-        return _.difference(all_data,tmp);
+        if(_.uniq(tmp).length != tmp.length)
+          return [];
+        else
+          return _.difference(all_data,tmp);
       }
       $scope.validateRow= function (row, col){
-        tmp =[];
-        for (idx in nine){
-          tmp.push($scope.data[nine[idx]][col]);
+        var tmp =[];
+        for (var idx in nine){
+          if ($scope.data[nine[idx]][col]!=0)
+            tmp.push($scope.data[nine[idx]][col]);
         }
-        return _.difference(all_data,tmp);
+        if(_.uniq(tmp).length != tmp.length)
+          return [];
+        else
+          return _.difference(all_data,tmp);
       }
       $scope.validateCol= function (row, col){
-        tmp =[];
-        for (idx in nine){
-          tmp.push($scope.data[row][nine[idx]]);
+        var tmp =[];
+        for (var idx in nine){
+          if($scope.data[row][nine[idx]] != 0)
+            tmp.push($scope.data[row][nine[idx]]);
         }
-        return _.difference(all_data,tmp);
+        if(_.uniq(tmp).length != tmp.length)
+          return [];
+        else
+          return _.difference(all_data,tmp);
       }
       $scope.validate = function(row,col){
         if($scope.data[row][col] == 0){
@@ -209,18 +223,18 @@
         }
       };
       $scope.onecheck = function(){
-        result = [];
-        for(row in nine){
-          for(col in nine){
-            tmp = $scope.validate(nine[row],nine[col]);
+        var result = [];
+        for(var row in nine){
+          for(var col in nine){
+            var tmp = $scope.validate(nine[row],nine[col]);
             if(tmp.length == 1){
               result.push({"row":nine[row], "col":nine[col], "num":tmp[0] ,"origin":"validateOnecheck"});
             }
-            rowcheck = $scope.validate(nine[row],nine[col]);
-            colcheck = $scope.validate(nine[row],nine[col]);
-            cellcheck = $scope.validate(nine[row],nine[col]);
+            var rowcheck = $scope.validate(nine[row],nine[col]);
+            var colcheck = $scope.validate(nine[row],nine[col]);
+            var cellcheck = $scope.validate(nine[row],nine[col]);
             // row check start
-            for(other_row in nine){
+            for(var other_row in nine){
               if(nine[row]!=nine[other_row])
                 rowcheck = _.difference(rowcheck, $scope.validate(nine[other_row],nine[col]));
             }
@@ -228,7 +242,7 @@
               result.push({"row":nine[row], "col":nine[col], "num":rowcheck[0] ,"origin":"rowcheck"});
             // row check end
             // col check start
-            for(other_col in nine){
+            for(var other_col in nine){
               if(nine[col]!=nine[other_col])
                 colcheck = _.difference(colcheck, $scope.validate(nine[row],nine[other_col]));
             }
@@ -236,10 +250,10 @@
               result.push({"row":nine[row], "col":nine[col], "num":colcheck[0] ,"origin":"colcheck"});
             // col check end
             // cell check start
-              cell_row_base=Math.floor(nine[row]/3)*3;
-              cell_col_base=Math.floor(nine[col]/3)*3;
-              for(ii=0;ii<3;ii++){
-                for(jj=0;jj<3;jj++){
+              var cell_row_base=Math.floor(nine[row]/3)*3;
+              var cell_col_base=Math.floor(nine[col]/3)*3;
+              for(var ii=0;ii<3;ii++){
+                for(var jj=0;jj<3;jj++){
                   if(nine[row]!=(cell_row_base+ii) ||nine[col]!=(cell_col_base+jj)){
                     cellcheck = _.difference( cellcheck, $scope.validate(cell_row_base+ii, cell_col_base+jj));
                   }
@@ -256,13 +270,13 @@
         return result;
       };
       $scope.branch = function(){
-        tmpselect = $scope.backtrack_stack.pop();
-        for(rr=0; rr<9; rr++){
-          for(cc=0; cc<9; cc++){
+        var tmpselect = $scope.backtrack_stack.pop();
+        for(var rr=0; rr<9; rr++){
+          for(var cc=0; cc<9; cc++){
             $scope.data[rr][cc] = parseInt(tmpselect["table"][rr*9+cc]);
           }
         }
-        tmpele = $scope.validate(tmpselect["cel_row"],tmpselect["cel_col"]);
+        var tmpele = $scope.validate(tmpselect["cel_row"],tmpselect["cel_col"]);
         if(tmpele.length>tmpselect["elnum"]+1){
           tmpselect["elnum"]=tmpselect["elnum"]+1;
           $scope.data[tmpselect["cel_row"]][tmpselect["cel_col"]] = tmpele[tmpselect["elnum"]];
@@ -274,19 +288,19 @@
         }
       };
       $scope.oneinput = function(){
-        list = $scope.onecheck();
+        var list = $scope.onecheck();
         if(list.length>0){
-          for (idx in list){
+          for (var idx in list){
             $scope.data[parseInt(list[idx]["row"])][parseInt(list[idx]["col"])] = parseInt(list[idx]["num"]);
           }
         }
         //backtracking 을 위한 준비 
         else {
-          tmptabledata ="";
-          min={"len":9,"r":0,"c":0};
-          notzero = 81;
-          for(brr = 0 ; brr<9; brr++){
-            for(bcc = 0; bcc<9; bcc++){
+          var tmptabledata ="";
+          var min={"len":9,"r":0,"c":0};
+          var notzero = 81;
+          for(var brr = 0 ; brr<9; brr++){
+            for(var bcc = 0; bcc<9; bcc++){
               tmptabledata = tmptabledata +$scope.data[brr][bcc];
               if($scope.data[brr][bcc]==0 && $scope.validate(brr,bcc).length ==0){
                 $scope.branch();
@@ -300,14 +314,37 @@
             }
           }
           if (notzero == 0){
+            // 검증
+            $scope.verify = "변경 없음"
+            for (var row in idx){
+              for (var col in idx){
+                if ($scope.provdata[row][col] != 0 && $scope.data[row][col] != $scope.provdata[row][col])
+                  $scope.verify = " 변경됨! ( " + row+ " , " + col+" )";
+                  return;
+              }
+            }
+            for (var row in idx){
+              var tmp = [];
+              for(var col in idx){
+                tmp.push($scope.data[row][col]);
+              }
+              if (_.uniq(tmp).length != tmp.length)
+                $scope.verify += "행번호 : "+ row +" 중복 발견!";
+            }
+            for (var col in idx){
+              var tmp = [];
+              for(var row in idx){
+                tmp.push($scope.data[row][col]);
+              }
+              if (_.uniq(tmp).length != tmp.length)
+                $scope.verify += "행번호 : "+ row +" 중복 발견!";
+            }
+            // 검증 끝
             return;
           }
-          console.log(tmptabledata);
-          tmpselect = {"table":tmptabledata,"cel_row":min["r"], "cel_col":min["c"],"elnum":0};
+          var tmpselect = {"table":tmptabledata,"cel_row":min["r"], "cel_col":min["c"],"elnum":0};
           $scope.data[tmpselect["cel_row"]][tmpselect["cel_col"]] = $scope.validate(tmpselect["cel_row"],tmpselect["cel_col"])[tmpselect["elnum"]];
           $scope.backtrack_stack.push(tmpselect);
-          console.log("pushed! ",tmpselect);
-          console.log($scope.backtrack_stack);
         }
       };
     });
@@ -315,7 +352,6 @@
 </head>
 <body ng-app="sudokuApp" ng-controller="sudokuCtrl">
   <h3>문제 선택</h3>
-  <br/>
   <select ng-model="selectedProv" ng-options="prov for prov in sampledata" ng-change="newgame()"></select><br>
   <table border='1'>
     <tr ng-repeat="row in idx">
@@ -327,8 +363,8 @@
   </table>
   <p><input type="button" value=" next step!! " ng-click="oneinput()"></input></p>
 
+  {{verify}}<br/>
   <h3>풀이 스텝별 변화상황</h3>
-  <br/>
   <table border='1'>
     <tr ng-repeat="row in idx">
       <td ng-repeat = "col in idx">
@@ -339,7 +375,6 @@
   </table>
   <br/>
   <h3>오리지널 문제</h3>
-  <br/>
   <table border='1'>
     <tr ng-repeat="row in idx">
       <td ng-repeat = "col in idx">
