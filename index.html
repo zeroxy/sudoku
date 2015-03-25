@@ -163,6 +163,7 @@
       $scope.provdata = [];
       $scope.verify="";
       $scope.totalstep=0;
+      $scope.inputProv=$scope.sampledata[0];
       var step = 1;
       for (var row in nine){
         $scope.data[row]=[];
@@ -176,11 +177,26 @@
         $scope.verify="";
         $scope.totalstep=0;
         $scope.backtrack_stack = [];
+        $scope.inputProv=$scope.selectedProv;
         step=1;
         for (var row in nine){
           for (var col in nine){
             $scope.data[nine[row]][nine[col]]=parseInt($scope.selectedProv[nine[col]+nine[row]*9]);
             $scope.provdata[nine[row]][nine[col]]=parseInt($scope.selectedProv[nine[col]+nine[row]*9]);
+          }
+        }
+      };
+      $scope.inputgame = function(){
+        if($scope.inputProv.length==81){
+          $scope.verify="";
+          $scope.totalstep=0;
+          $scope.backtrack_stack = [];
+          step=1;
+          for (var row in nine){
+            for (var col in nine){
+              $scope.data[nine[row]][nine[col]]=parseInt($scope.inputProv[nine[col]+nine[row]*9]);
+              $scope.provdata[nine[row]][nine[col]]=parseInt($scope.inputProv[nine[col]+nine[row]*9]);
+            }
           }
         }
       };
@@ -367,11 +383,12 @@
 <body ng-app="sudokuApp" ng-controller="sudokuCtrl">
   <h3>문제 선택</h3>
   <select ng-model="selectedProv" ng-options="prov for prov in sampledata" ng-change="newgame()"></select><br>
+  <input type="text" ng-model="inputProv" ng-maxlength="81" ng-change="inputgame()" size="83"></input><br>
   <table border='1'>
     <tr ng-repeat="row in idx">
       <td ng-repeat = "col in idx">
         {{validate(idx[row],idx[col])}}<br/>
-        <input type="number" min="0" max="9" length="1" ng-model="data[row][col]"></input>
+        <b>{{data[row][col]}}</b>
       </td>
     </tr>
   </table>
