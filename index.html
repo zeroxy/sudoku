@@ -379,23 +379,46 @@
           $scope.backtrack_stack.push(tmpselect);
         }
       };
-      
+      $scope.teninput = function (){
+        for (var loop = 0 ; loop <10; loop++){
+          $scope.oneinput();
+        }
+      }
     });
   </script>
+  <style>
+    table {
+      margin:0em;
+    }
+    td {
+      height:30px;
+      width:30px;
+      border:1px solid;
+      text-align:center;
+    }
+    td:first-child {
+      border-left:solid;
+    }
+    td:nth-child(3n) {
+      border-right:solid ;
+    }
+    tr:first-child {
+      border-top:solid;
+    }
+    tr:nth-child(3n) td {
+      border-bottom:solid ;
+    }
+  </style>
 </head>
 <body ng-app="sudokuApp" ng-controller="sudokuCtrl">
   <h3>문제 선택</h3>
   <select ng-model="selectedProv" ng-options="prov for prov in sampledata" ng-change="newgame()"></select><br>
   <input type="text" ng-model="inputProv" ng-maxlength="81" ng-change="inputgame()" size="83"></input><br>
-  <table border='1'>
-    <tr ng-repeat="row in idx">
-      <td ng-repeat = "col in idx">
-        {{validate(idx[row],idx[col])}}<br/>
-        <b>{{data[row][col]}}</b>
-      </td>
-    </tr>
-  </table>
-  <p><input type="button" value=" next step!! " ng-click="oneinput()"></input></p>
+  <p>
+    <input type="button" value=" next step!! " ng-click="oneinput()"></input>
+    &nbsp;&nbsp;&nbsp;
+    <input type="button" value=" next 10 steps ! " ng-click="teninput()"></input>
+  </p>
   {{totalstep}}<br/>
   {{verify}}<br/>
   <h3>풀이 스텝별 변화상황</h3>
@@ -407,13 +430,23 @@
       </td>
     </tr>
   </table>
-  <br/>
   <h3>오리지널 문제</h3>
   <table border='1'>
     <tr ng-repeat="row in idx">
       <td ng-repeat = "col in idx">
         <b ng-show="provdata[row][col] == 0">{{provdata[row][col]}}</b>
         <span ng-hide="provdata[row][col] == 0">{{provdata[row][col]}}</b>
+      </td>
+    </tr>
+  </table>
+  <br/>
+  <hr/>
+  <h3>셀별 가능 요소 / 기입된 요소(0은 미기입 상태)</h3>
+  <table border='1'>
+    <tr ng-repeat="row in idx">
+      <td ng-repeat = "col in idx">
+        {{validate(idx[row],idx[col])}}<br/>
+        <b>{{data[row][col]}}</b>
       </td>
     </tr>
   </table>
