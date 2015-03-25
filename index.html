@@ -183,8 +183,8 @@
         step=1;
         for (var row in nine){
           for (var col in nine){
-            $scope.data[nine[row]][nine[col]]=parseInt($scope.selectedProv[nine[col]+nine[row]*9]);
-            $scope.provdata[nine[row]][nine[col]]=parseInt($scope.selectedProv[nine[col]+nine[row]*9]);
+            $scope.data[nine[row]][nine[col]] =   parseInt($scope.selectedProv[nine[col]+nine[row]*9])?parseInt($scope.selectedProv[nine[col]+nine[row]*9]):0;
+            $scope.provdata[nine[row]][nine[col]]=parseInt($scope.selectedProv[nine[col]+nine[row]*9])?parseInt($scope.selectedProv[nine[col]+nine[row]*9]):0;
           }
         }
       };
