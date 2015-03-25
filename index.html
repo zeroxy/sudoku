@@ -175,6 +175,7 @@
       $scope.newgame = function(){
         $scope.verify="";
         $scope.totalstep=0;
+        $scope.backtrack_stack = [];
         step=1;
         for (var row in nine){
           for (var col in nine){
