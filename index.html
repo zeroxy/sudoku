@@ -162,6 +162,8 @@
       $scope.backtrack_stack = [];
       $scope.provdata = [];
       $scope.verify="";
+      $scope.totalstep=0;
+      var step = 1;
       for (var row in nine){
         $scope.data[row]=[];
         $scope.provdata[row] = [];
@@ -172,6 +174,8 @@
       }
       $scope.newgame = function(){
         $scope.verify="";
+        $scope.totalstep=0;
+        step=1;
         for (var row in nine){
           for (var col in nine){
             $scope.data[nine[row]][nine[col]]=parseInt($scope.selectedProv[nine[col]+nine[row]*9]);
@@ -289,6 +293,7 @@
         }
       };
       $scope.oneinput = function(){
+        $scope.totalstep+=step;
         var list = $scope.onecheck();
         if(list.length>0){
           for (var idx in list){
@@ -344,6 +349,9 @@
             // 검증 끝
             if($scope.verify.length==0){
               $scope.verify="문제 없음";
+              step=0;
+            } else {
+              $scope.branch();
             }
             return;
           }
@@ -367,7 +375,7 @@
     </tr>
   </table>
   <p><input type="button" value=" next step!! " ng-click="oneinput()"></input></p>
-
+  {{totalstep}}<br/>
   {{verify}}<br/>
   <h3>풀이 스텝별 변화상황</h3>
   <table border='1'>
