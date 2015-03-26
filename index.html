@@ -384,6 +384,11 @@
           $scope.oneinput();
         }
       }
+      $scope.hundredinput = function (){
+        for (var loop = 0 ; loop <100; loop++){
+          $scope.oneinput();
+        }
+      }
     });
   </script>
   <style>
@@ -420,6 +425,8 @@
     <input type="button" value=" next step!! " ng-click="oneinput()"></input>
     &nbsp;&nbsp;&nbsp;
     <input type="button" value=" next 10 steps ! " ng-click="teninput()"></input>
+    &nbsp;&nbsp;&nbsp;
+    <input type="button" value=" next 100 steps ! " ng-click="hundredinput()"></input>
   </p>
   {{totalstep}}<br/>
   {{verify}}<br/>
